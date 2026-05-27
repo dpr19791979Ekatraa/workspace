@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { DocumentsService } from './documents.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('documents')
 export class DocumentsController {
@@ -18,7 +19,7 @@ export class DocumentsController {
     private documentsService: DocumentsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createDocument(
     @CurrentUser() currentUser: any,
@@ -32,7 +33,7 @@ export class DocumentsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getDocuments(
     @CurrentUser() currentUser: any,

@@ -7,6 +7,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 import { CalendarService } from './calendar.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('calendar')
 export class CalendarController {
@@ -14,7 +15,7 @@ export class CalendarController {
     private calendarService: CalendarService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get('upcoming')
   async getUpcomingEvents() {
     return this.calendarService.getUpcomingEvents();

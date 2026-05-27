@@ -10,6 +10,7 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import { QueryProvider } from '@/providers/query-provider';
 import { AppSnackbarProvider } from '@/providers/snackbar-provider';
 import { AuthSyncProvider } from '@/providers/auth-sync-provider';
+import { AuthSync } from '@/components/auth/auth-sync';
 
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
               <AppSnackbarProvider>
             <ThemeProvider>
               <AuthSyncProvider>
+                <AuthSync />
                 {children}
               </AuthSyncProvider>
             </ThemeProvider>

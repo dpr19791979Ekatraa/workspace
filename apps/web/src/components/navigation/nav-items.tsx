@@ -58,7 +58,7 @@ export const navItems = [
       'SUPER_ADMIN',
       'ADMIN',
       'HR',
-      'EMPLOYEE',
+     
     ],
   },
 

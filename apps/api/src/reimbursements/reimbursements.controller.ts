@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { ReimbursementsService } from './reimbursements.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('reimbursements')
 export class ReimbursementsController {
@@ -20,7 +21,7 @@ export class ReimbursementsController {
     private reimbursementsService: ReimbursementsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createReimbursement(
     @CurrentUser() currentUser: any,
@@ -34,7 +35,7 @@ export class ReimbursementsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get('my')
   async getMyReimbursements(
     @CurrentUser() currentUser: any,
@@ -44,7 +45,7 @@ export class ReimbursementsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get('pending')
   async getPendingReimbursements(
     @CurrentUser() currentUser: any,
@@ -54,7 +55,7 @@ export class ReimbursementsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Patch(':id/review')
   async reviewReimbursement(
     @CurrentUser() currentUser: any,

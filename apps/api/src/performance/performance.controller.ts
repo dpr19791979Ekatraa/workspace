@@ -12,6 +12,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { PerformanceService } from './performance.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('performance')
 export class PerformanceController {
@@ -19,7 +20,7 @@ export class PerformanceController {
     private performanceService: PerformanceService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createPerformanceRecord(
     @CurrentUser() currentUser: any,
@@ -33,7 +34,7 @@ export class PerformanceController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getAllPerformanceRecords(
     @CurrentUser() currentUser: any,
@@ -43,7 +44,7 @@ export class PerformanceController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get(':employeeId')
   async getEmployeePerformance(
     @CurrentUser() currentUser: any,

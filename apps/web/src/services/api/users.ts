@@ -18,3 +18,15 @@ export async function createUser(
 
   return response.data;
 }
+export async function updateUser(
+  id: string,
+  data: any,
+) {
+  const response =
+    await apiClient.patch(
+      `/users/${id}`,
+      data,
+    );
+
+  return response.data;
+}

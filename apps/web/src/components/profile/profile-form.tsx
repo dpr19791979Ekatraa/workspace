@@ -61,9 +61,39 @@ export function ProfileForm({
     data: any,
   ) {
     try {
-      await updateMutation.mutateAsync(
-        data,
-      );
+      const payload = {
+  name: data.name,
+  phone: data.phone,
+  department:
+    data.department,
+  designation:
+    data.designation,
+  birthday:
+    data.birthday,
+  relationshipStatus:
+    data.relationshipStatus,
+  marriageDate:
+    data.marriageDate,
+  fatherName:
+    data.fatherName,
+  motherName:
+    data.motherName,
+  spouseName:
+    data.spouseName,
+  emergencyContact:
+    data.emergencyContact,
+  childrenCount:
+    data.childrenCount,
+  joiningDate:
+    data.joiningDate,
+  whatsappNumber:
+    data.whatsappNumber,
+};
+
+await updateMutation.mutateAsync({
+  id: profile.id,
+  ...payload,
+});
 
       enqueueSnackbar(
         'Profile updated successfully',

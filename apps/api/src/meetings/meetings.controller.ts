@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { MeetingsService } from './meetings.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('meetings')
 export class MeetingsController {
@@ -18,7 +19,7 @@ export class MeetingsController {
     private meetingsService: MeetingsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createMeeting(
     @CurrentUser() currentUser: any,
@@ -40,7 +41,7 @@ export class MeetingsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getMyMeetings(
     @CurrentUser() currentUser: any,

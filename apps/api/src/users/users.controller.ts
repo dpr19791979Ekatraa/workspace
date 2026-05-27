@@ -26,6 +26,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -40,7 +41,7 @@ export class UsersController {
     return this.usersService.createUser(dto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   @Get()
   async findAllUsers() {
@@ -48,7 +49,7 @@ export class UsersController {
   }
 
   // ADD IT HERE
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get(':id')
   async findUserById(
     @Param('id') id: string,
@@ -57,9 +58,11 @@ export class UsersController {
   }
 
   // UPDATE ROUTE BELOW
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
-  @Patch(':id')
+  // @UseGuards(ClerkAuthGuard, RolesGuard)
+  // @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  // @Patch(':id')
+  @UseGuards(ClerkAuthGuard)
+@Patch(':id')
   async updateUser(
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,

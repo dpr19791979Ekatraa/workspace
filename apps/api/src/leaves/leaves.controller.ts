@@ -12,18 +12,19 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { LeavesService } from './leaves.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('leaves')
 export class LeavesController {
   constructor(private leavesService: LeavesService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getLeaves(@CurrentUser() currentUser: any) {
     return this.leavesService.getLeaves(currentUser);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createLeave(
     @CurrentUser() currentUser: any,
@@ -38,7 +39,7 @@ export class LeavesController {
     return this.leavesService.createLeave(currentUser, body);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Patch(':id')
   async updateLeave(
     @CurrentUser() currentUser: any,

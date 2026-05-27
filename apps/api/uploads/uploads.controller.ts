@@ -14,10 +14,11 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 
 import { JwtAuthGuard } from '../src/auth/jwt-auth.guard';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('uploads')
 export class UploadsController {
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {

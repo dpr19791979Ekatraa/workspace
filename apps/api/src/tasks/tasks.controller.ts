@@ -17,6 +17,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 import { TasksService } from './tasks.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('tasks')
 export class TasksController {
@@ -24,7 +25,7 @@ export class TasksController {
     private tasksService: TasksService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createTask(
     @Body() dto: CreateTaskDto,
@@ -36,7 +37,7 @@ export class TasksController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Patch(':id')
   async updateTask(
     @Param('id') id: string,
@@ -48,7 +49,7 @@ export class TasksController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async findAllTasks() {
     return this.tasksService.findAllTasks();

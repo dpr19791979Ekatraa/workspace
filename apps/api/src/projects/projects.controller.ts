@@ -13,6 +13,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ProjectsService } from './projects.service';
 
 import { CreateProjectDto } from './dto/create-project.dto';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('projects')
 export class ProjectsController {
@@ -20,7 +21,7 @@ export class ProjectsController {
     private projectsService: ProjectsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createProject(
     @Body() dto: CreateProjectDto,
@@ -32,7 +33,7 @@ export class ProjectsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async findAllProjects() {
     return this.projectsService.findAllProjects();

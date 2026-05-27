@@ -12,6 +12,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { PoliciesService } from './policies.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('policies')
 export class PoliciesController {
@@ -19,7 +20,7 @@ export class PoliciesController {
     private policiesService: PoliciesService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createPolicy(
     @CurrentUser() currentUser: any,
@@ -39,13 +40,13 @@ export class PoliciesController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getPolicies() {
     return this.policiesService.getPolicies();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get(':category')
   async getPoliciesByCategory(
     @Param('category')

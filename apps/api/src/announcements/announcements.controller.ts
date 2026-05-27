@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { AnnouncementsService } from './announcements.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('announcements')
 export class AnnouncementsController {
@@ -18,7 +19,7 @@ export class AnnouncementsController {
     private announcementsService: AnnouncementsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post()
   async createAnnouncement(
     @CurrentUser() currentUser: any,
@@ -36,7 +37,7 @@ export class AnnouncementsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getAnnouncements() {
     return this.announcementsService.getAnnouncements();

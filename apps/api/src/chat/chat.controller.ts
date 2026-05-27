@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { ChatService } from './chat.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('chat')
 export class ChatController {
@@ -18,7 +19,7 @@ export class ChatController {
     private chatService: ChatService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Post('direct')
   async createDirectChat(
     @CurrentUser() currentUser: any,
@@ -35,7 +36,7 @@ export class ChatController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getMyChats(
     @CurrentUser() currentUser: any,
@@ -44,7 +45,7 @@ export class ChatController {
       currentUser.id,
     );
   }
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
 @Post('message')
 async sendMessage(
   @CurrentUser() currentUser: any,

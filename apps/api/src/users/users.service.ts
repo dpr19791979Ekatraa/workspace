@@ -294,6 +294,16 @@ export class UsersService {
         'User not found',
       );
     }
+    if (
+  currentUser.role ===
+    'EMPLOYEE' &&
+  currentUser.clerkUserId !==
+    existingUser.clerkUserId
+) {
+  throw new BadRequestException(
+    'You can only edit your own profile',
+  );
+}
 
     // Only Super Admin can change roles
     if (
@@ -329,6 +339,32 @@ export class UsersService {
         );
       }
     }
+    if (dto.birthday) {
+  dto.birthday = new Date(
+    dto.birthday,
+  );
+}
+
+if (dto.marriageDate) {
+  dto.marriageDate =
+    new Date(
+      dto.marriageDate,
+    );
+}
+
+if (dto.joiningDate) {
+  dto.joiningDate =
+    new Date(
+      dto.joiningDate,
+    );
+}
+
+if (dto.childrenCount) {
+  dto.childrenCount =
+    Number(
+      dto.childrenCount,
+    );
+}
 
     return this.prisma.user.update({
       where: { id },

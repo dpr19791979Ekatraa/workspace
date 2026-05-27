@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 import { NotificationsService } from './notifications.service';
+import { ClerkAuthGuard } from 'src/auth/guards/clerk-auth.guard';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -18,7 +19,7 @@ export class NotificationsController {
     private notificationsService: NotificationsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Get()
   async getNotifications(
     @CurrentUser() currentUser: any,
@@ -28,7 +29,7 @@ export class NotificationsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ClerkAuthGuard)
   @Patch(':id/read')
   async markAsRead(
     @Param('id') id: string,
