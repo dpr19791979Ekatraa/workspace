@@ -1,0 +1,481 @@
+generator client {
+  provider = "prisma-client-js"
+ 
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
+}
+
+enum RoleType {
+  SUPER_ADMIN
+  ADMIN
+  HR
+  EMPLOYEE
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+enum EventType {
+  BIRTHDAY
+  WORK_ANNIVERSARY
+  MARRIAGE_ANNIVERSARY
+  COMPANY_EVENT
+}
+enum LeaveType {
+  SICK
+  CASUAL
+  EARNED
+  MATERNITY
+  PATERNITY
+}
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum ReimbursementCategory {
+  TRAVEL
+  MEALS
+  ACCOMMODATION
+  SUPPLIES
+  SOFTWARE
+  TRAINING
+  CLIENT_EXPENSE
+  PHONE_BILL
+  OTHER
+}
+enum ReimbursementStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum DocumentVisibility {
+  ALL_EMPLOYEES
+  ADMIN
+  SUPER_ADMIN
+  HR
+}
+enum PolicyCategory {
+  CODE_OF_CONDUCT
+  LEAVE_POLICY
+  ATTENDANCE_WORKING_HOURS
+  IT_DATA_SECURITY
+  ANTI_HARASSMENT
+  TRAVEL_EXPENSE
+  EMPLOYEE_REFERRAL
+  INSURANCE
+}
+enum PerformanceType {
+  GOAL
+  KRI
+  REVIEW
+  FEEDBACK_360
+  APPRAISAL
+  PROMOTION
+}
+model User {
+  id              String   @id @default(uuid())
+  clerkUserId     String? @unique
+
+  name            String
+  email           String   @unique
+  password        String?
+
+  role            RoleType @default(EMPLOYEE)
+
+  phone           String?
+
+  department      String?
+  designation     String?
+
+  birthday        DateTime?
+
+  relationshipStatus String?
+
+  marriageDate    DateTime?
+
+  fatherName      String?
+  motherName      String?
+  spouseName      String?
+
+  emergencyContact String?
+
+  childrenCount   Int?
+
+  joiningDate     DateTime?
+
+  whatsappNumber  String?
+
+  isActive        Boolean @default(true)
+  projects        Project[]
+
+  assignedTasks   Task[]
+
+  createdTasks    Task[] @relation("TaskCreator")
+  calendarEvents  CalendarEvent[]
+
+  notifications   Notification[]
+  chatMemberships ChatMember[]
+
+  messages        Message[]
+  createdMeetings Meeting[]
+
+  meetingParticipations MeetingParticipant[]
+  announcements Announcement[]
+  leaveRequests LeaveRequest[]
+
+  reviewedLeaves LeaveRequest[] @relation("LeaveReviewer")
+  reimbursements Reimbursement[]
+
+  reviewedReimbursements Reimbursement[] @relation("ReimbursementReviewer")
+  documents      Document[]
+  policies       Policy[]
+  performanceRecords Performance[]
+
+  createdPerformance Performance[] @relation("PerformanceCreator")
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+
+  createdBy       String?
+  updatedBy       String?
+}
+
+model Project {
+  id            String @id @default(uuid())
+
+  name          String
+  description   String?
+
+  status        ProjectStatus
+  priority      ProjectPriority
+  
+
+  dueDate       DateTime?
+
+  completedAt   DateTime?
+
+  completionNote String?
+  completionFile String?
+
+  createdById   String
+  createdBy     User @relation(fields: [createdById], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+  tasks         Task[]
+}
+model Task {
+  id              String @id @default(uuid())
+
+  title           String
+
+  description     String?
+
+  status          TaskStatus
+
+  priority        TaskPriority
+
+  dueDate         DateTime?
+
+  completionNote  String?
+
+  completionFile  String?
+
+  completedAt     DateTime?
+
+  projectId       String
+  project         Project @relation(fields: [projectId], references: [id])
+
+  assignedToId    String
+  assignedTo      User @relation(fields: [assignedToId], references: [id])
+
+  createdById     String
+  createdBy       User @relation("TaskCreator", fields: [createdById], references: [id])
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+  
+}
+model CalendarEvent {
+  id          String @id @default(uuid())
+
+  title       String
+
+  description String?
+
+  eventType   EventType
+
+  eventDate   DateTime
+
+  isRecurring Boolean @default(false)
+
+  userId      String?
+  user        User? @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
+
+model Notification {
+  id          String @id @default(uuid())
+
+  title       String
+
+  message     String
+
+  isRead      Boolean @default(false)
+
+  userId      String
+  user        User @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
+model Chat {
+  id          String @id @default(uuid())
+
+  isGroup     Boolean @default(false)
+
+  name        String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  members     ChatMember[]
+
+  messages    Message[]
+}
+model ChatMember {
+  id          String @id @default(uuid())
+
+  chatId      String
+  userId      String
+
+  chat        Chat @relation(fields: [chatId], references: [id])
+
+  user        User @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+
+  @@unique([chatId, userId])
+}
+model Message {
+  id          String @id @default(uuid())
+
+  content     String
+
+  chatId      String
+  senderId    String
+
+  chat        Chat @relation(fields: [chatId], references: [id])
+
+  sender      User @relation(fields: [senderId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
+model Meeting {
+  id            String @id @default(uuid())
+
+  title         String
+
+  description   String?
+
+  roomId        String @unique
+
+  meetingLink   String
+
+  isActive      Boolean @default(true)
+
+  scheduledFor  DateTime?
+
+  createdById   String
+
+  createdBy     User @relation(fields: [createdById], references: [id])
+
+  participants  MeetingParticipant[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
+model MeetingParticipant {
+  id          String @id @default(uuid())
+
+  meetingId   String
+  userId      String
+
+  meeting     Meeting @relation(fields: [meetingId], references: [id])
+
+  user        User @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+
+  @@unique([meetingId, userId])
+}
+
+model Announcement {
+  id            String @id @default(uuid())
+
+  title         String
+
+  content       String
+
+  createdById   String
+
+  createdBy     User @relation(fields: [createdById], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
+model LeaveRequest {
+  id            String @id @default(uuid())
+
+  leaveType     LeaveType
+
+  reason        String
+
+  startDate     DateTime
+
+  endDate       DateTime
+
+  status        LeaveStatus @default(PENDING)
+
+  employeeId    String
+
+  employee      User @relation(fields: [employeeId], references: [id])
+
+  reviewedById  String? 
+  reviewedBy User? @relation( "LeaveReviewer", fields: [reviewedById], references: [id])
+
+  reviewedAt    DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
+model Reimbursement {
+  id              String @id @default(uuid())
+
+  category        ReimbursementCategory
+
+  amount          Float
+
+  currency        String
+
+  expenseDate     DateTime
+
+  description     String
+
+  receiptFile     String
+
+  status          ReimbursementStatus @default(PENDING)
+
+  employeeId      String
+
+  employee        User @relation(fields: [employeeId], references: [id])
+
+  reviewedById    String?
+  reviewedBy      User? @relation("ReimbursementReviewer", fields: [reviewedById], references: [id])
+
+  reviewedAt      DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+}
+model Document {
+  id            String @id @default(uuid())
+
+  fileName      String
+
+  description   String?
+
+  fileUrl       String?
+
+  externalUrl   String?
+
+  visibility    DocumentVisibility
+
+  uploadedById  String
+
+  uploadedBy    User @relation(fields: [uploadedById], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
+model Policy {
+  id            String @id @default(uuid())
+
+  title         String
+
+  content       String
+
+  category      PolicyCategory
+
+  createdById   String
+
+  createdBy     User @relation(fields: [createdById], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
+model Performance {
+  id            String @id @default(uuid())
+
+  type          PerformanceType
+
+  title         String
+
+  description   String?
+
+  employeeId    String
+
+  employee      User @relation(fields: [employeeId], references: [id])
+
+  createdById   String
+
+  createdBy User @relation("PerformanceCreator", fields: [createdById], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+}
